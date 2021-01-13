@@ -75,7 +75,7 @@ while True:
         else:
             break
 
-    if board.is_tie() == True:
+    if board.is_tie():
         print("\nTie game!\n")
         play_again = input("Would you like to play again? (Y/N) > ").upper()
         if play_again == "Y":
