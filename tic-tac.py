@@ -4,41 +4,47 @@ os.system("clear")
 
 class Board():
     def __init__(self):
-        self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
-
+        self.cells = [[" ", " ", " "],
+                      [" ", " ", " "], 
+		              [" ", " ", " "]]
+                      
     def display(self):
-        print((" %s | %s | %s " %(self.cells[1], self.cells[2], self.cells[3])))
+        print((" %s | %s | %s " %(self.cells[0][0], self.cells[0][1], self.cells[0][2])))
         print("-----------")
-        print((" %s | %s | %s " %(self.cells[4], self.cells[5], self.cells[6])))
+        print((" %s | %s | %s " %(self.cells[1][0], self.cells[1][1], self.cells[1][2])))
         print("-----------")
-        print((" %s | %s | %s " %(self.cells[7], self.cells[8], self.cells[9])))
+        print((" %s | %s | %s " %(self.cells[2][0], self.cells[2][1], self.cells[2][2])))
 
-    def update_cell(self, cell_no, player):
-        if self.cells[cell_no] == " ":
-            self.cells[cell_no] = player
+    def update_cell(self, row, column, player):
+        if self.cells[row][column] == " ":
+            self.cells[row][column] = player
 
     def is_winner(self, player):
-        for combo in [[1, 2, 3], [1, 4, 7],[4 , 5, 6], [2, 5, 8], [3, 6, 9], [7, 8, 9], [1, 5, 9], [3, 5, 7]]:
+        if (self.cells[0][0] == self.cells[1][0] == self.cells[2][0] == player)\
+            or (self.cells[0][0] == self.cells[0][1] == self.cells[0][2] == player)\
+            or (self.cells[0][1] == self.cells[1][1] == self.cells[2][1] == player)\
+            or (self.cells[0][2] == self.cells[1][2] == self.cells[2][2] == player)\
+            or (self.cells[1][0] == self.cells[1][1] == self.cells[1][2] == player)\
+            or (self.cells[2][0] == self.cells[2][1] == self.cells[2][2] == player)\
+            or (self.cells[0][0] == self.cells[1][1] == self.cells[2][2] == player)\
+            or (self.cells[0][2] == self.cells[1][1] == self.cells[2][0] == player):
             result = True
-            for cell_no in combo:
-                if self.cells[cell_no] != player:
-                    result = False
             if result == True:
                 return True
         return False        
 
     def is_tie(self):
-        used_cells = 0
-        for cell in self.cells:
-            if cell != " ":
-                used_cells += 1
-        if used_cells == 9:
-            return True
-        else:
-            return False    
-
+        for i in self.cells:
+            for j in i:
+                if j == " ":
+                    return False
+        return True          
+                    
+        
     def reset(self):
-        self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "] 
+        self.cells = [[" ", " ", " "],
+                      [" ", " ", " "], 
+		              [" ", " ", " "]] 
 
 
 board = Board()
@@ -56,8 +62,9 @@ def refresh_screen():
 
 while True:
     refresh_screen()
-    x_choice = int(eval(input("\nX) Plase choose 1 - 9. >")))
-    board.update_cell(x_choice, "X")
+    x_row = (int(eval(input("\nX) Plase choose row >"))-1))
+    x_column = (int(eval(input("\nX) Plase choose column >"))-1))
+    board.update_cell(x_row, x_column, "X")
     refresh_screen()
     if board.is_winner("X"):
         print("\nX wins!\n")
@@ -68,7 +75,7 @@ while True:
         else:
             break
 
-    if board.is_tie():
+    if board.is_tie() == True:
         print("\nTie game!\n")
         play_again = input("Would you like to play again? (Y/N) > ").upper()
         if play_again == "Y":
@@ -77,8 +84,9 @@ while True:
         else:
             break    
 
-    o_choice = int(eval(input("\nO) Plase choose 1 - 9. >")))
-    board.update_cell(o_choice, "O")
+    o_row = (int(eval(input("\nO) Plase choose row >"))-1))
+    o_column = (int(eval(input("\nO) Plase choose column >"))-1))
+    board.update_cell(o_row, o_column, "O")
     if board.is_winner("O"):
         print("\nO wins!\n")
         play_again = input("Would you like to play again? (Y/N) > ").upper()
