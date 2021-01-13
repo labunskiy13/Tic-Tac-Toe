@@ -20,23 +20,20 @@ class Board():
             self.cells[row][column] = player
 
     def is_winner(self, player):
-        if (self.cells[0][0] == self.cells[1][0] == self.cells[2][0] == player)\
-            or (self.cells[0][0] == self.cells[0][1] == self.cells[0][2] == player)\
-            or (self.cells[0][1] == self.cells[1][1] == self.cells[2][1] == player)\
-            or (self.cells[0][2] == self.cells[1][2] == self.cells[2][2] == player)\
-            or (self.cells[1][0] == self.cells[1][1] == self.cells[1][2] == player)\
-            or (self.cells[2][0] == self.cells[2][1] == self.cells[2][2] == player)\
+        if self.cells[0] == [player, player, player]\
+            or self.cells[1] == [player, player, player]\
+            or self.cells[2] == [player, player, player]\
             or (self.cells[0][0] == self.cells[1][1] == self.cells[2][2] == player)\
             or (self.cells[0][2] == self.cells[1][1] == self.cells[2][0] == player):
             result = True
-            if result == True:
+            if result:
                 return True
         return False        
 
     def is_tie(self):
-        for row in self.cells:
-            for element in row:
-                if element == " ":
+        for i in self.cells:
+            for j in i:
+                if j == " ":
                     return False
         return True          
                     
@@ -75,7 +72,7 @@ while True:
         else:
             break
 
-    if board.is_tie():
+    if board.is_tie() == True:
         print("\nTie game!\n")
         play_again = input("Would you like to play again? (Y/N) > ").upper()
         if play_again == "Y":
