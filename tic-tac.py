@@ -34,9 +34,9 @@ class Board():
         return False        
 
     def is_tie(self):
-        for i in self.cells:
-            for j in i:
-                if j == " ":
+        for row in self.cells:
+            for element in row:
+                if element == " ":
                     return False
         return True          
                     
