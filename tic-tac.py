@@ -20,16 +20,14 @@ class Board():
             self.cells[row][column] = player
 
     def is_winner(self, player):
-        if (self.cells[0][0] == self.cells[1][0] == self.cells[2][0] == player)\
-            or (self.cells[0][0] == self.cells[0][1] == self.cells[0][2] == player)\
-            or (self.cells[0][1] == self.cells[1][1] == self.cells[2][1] == player)\
-            or (self.cells[0][2] == self.cells[1][2] == self.cells[2][2] == player)\
-            or (self.cells[1][0] == self.cells[1][1] == self.cells[1][2] == player)\
-            or (self.cells[2][0] == self.cells[2][1] == self.cells[2][2] == player)\
+        x_or_y = ''.join(player+player+player)
+        if ''.join(self.cells[0]) == x_or_y \
+            or ''.join(self.cells[1]) == x_or_y\
+            or ''.join(self.cells[2]) == x_or_y\
             or (self.cells[0][0] == self.cells[1][1] == self.cells[2][2] == player)\
             or (self.cells[0][2] == self.cells[1][1] == self.cells[2][0] == player):
             result = True
-            if result == True:
+            if result:
                 return True
         return False        
 
