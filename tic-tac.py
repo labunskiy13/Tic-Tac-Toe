@@ -20,7 +20,7 @@ class Board:
     def update_cell(self, row, column, player):
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
-
+        
     def is_winner(self, player):
         winner = player*3  # 'XXX' or 'OOO'
 
@@ -44,14 +44,12 @@ class Board:
 
         return False
 
-
     def is_tie(self):
         # TODO: Fix this loops!
 
         for row in self.cells:
-            for element in row:
-                if element == ' ':
-                    return False
+            if " " in row:
+                return False
         return True
 
     def reset(self):
