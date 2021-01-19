@@ -46,6 +46,8 @@ class Board:
 
 
     def is_tie(self):
+        # TODO: Fix this loops!
+
         for row in self.cells:
             for element in row:
                 if element == ' ':
