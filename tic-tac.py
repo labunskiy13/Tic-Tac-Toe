@@ -51,11 +51,10 @@ class Board:
 
     def is_tie(self):
         for row in self.cells:
-            for element in row:
-                if element == ' ':
-                    return False
+            if " " in row:
+                return False
         return True
-
+        
     def reset(self):
         """Reset board cells. """
 
@@ -112,8 +111,6 @@ class Game:
             )-1
             if self.board.update_cell(selected_row, selected_column, player):
                 break
-
-
 
     def finish(self):
         play_again = input('Would you like to play again? (Y/N) > ').upper()
