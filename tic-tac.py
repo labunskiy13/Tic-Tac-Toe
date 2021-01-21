@@ -20,6 +20,10 @@ class Board:
     def update_cell(self, row, column, player):
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
+            return True
+        else:
+            print("this cell is occupied, repeat the move and be careful!)")
+            return False    
 
     def is_winner(self, player):
         winner = player*3  # 'XXX' or 'OOO'
@@ -51,7 +55,7 @@ class Board:
             if " " in row:
                 return False
         return True
-
+        
     def reset(self):
         """Reset board cells. """
 
@@ -97,16 +101,17 @@ class Game:
                 self.finish()
 
     def step(self, player):
-        """One game step. Select row, column and update cell. """
-
-        selected_row = int(
-            input('\n{0}) Please choose row >'.format(player))
-        )-1
-        print('selected_row: ', selected_row, type(selected_row))
-        selected_column = int(
-            input('\n{0}) Please choose column >'.format(player))
-        )-1
-        self.board.update_cell(selected_row, selected_column, player)
+        while True:
+            """One game step. Select row, column and update cell. """
+            selected_row = int(
+                input('\n{0}) Please choose row >'.format(player))
+            )-1
+            print('selected_row: ', selected_row, type(selected_row))
+            selected_column = int(
+                input('\n{0}) Please choose column >'.format(player))
+            )-1
+            if self.board.update_cell(selected_row, selected_column, player):
+                break
 
     def finish(self):
         play_again = input('Would you like to play again? (Y/N) > ').upper()
