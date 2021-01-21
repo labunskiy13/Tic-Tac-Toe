@@ -22,7 +22,6 @@ class Board:
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
              
-            
     def place_check(self, row, column):
         if self.cells[row][column] == " ":
             return True
@@ -66,17 +65,19 @@ class Board:
 
         self.cells = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
-class Comp:
+
+class AiPlayer:
 
     def init(self, board, *args, **kwargs):
         self.cells = board.cells
         self.board = board
 
-    def print_fack(self):
+    def step_ai(self):
         selected_row, selected_column = randint(0, 2), randint(0, 2)
         while self.cells[selected_row][selected_column] != " ":
             selected_row, selected_column = randint(0, 2), randint(0, 2)
         return self.board.update_cell(selected_row, selected_column, "O")
+
 
 class Game:
     """Main game tic-tac class. """
@@ -109,7 +110,7 @@ class Game:
                 self.finish()
 
             if single_or_company == "S":
-                Comp.print_fack(self)
+                AiPlayer.step_ai(self)
             else:    
                 self.step('O')
 
