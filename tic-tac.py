@@ -20,7 +20,7 @@ class Board:
     def update_cell(self, row, column, player):
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
-        
+
     def is_winner(self, player):
         winner = player*3  # 'XXX' or 'OOO'
 
