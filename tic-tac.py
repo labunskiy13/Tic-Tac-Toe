@@ -44,12 +44,12 @@ class Board:
 
         return False
 
-
     def is_tie(self):
+        # TODO: Fix this loops!
+
         for row in self.cells:
-            for element in row:
-                if element == ' ':
-                    return False
+            if " " in row:
+                return False
         return True
 
     def reset(self):
