@@ -1,5 +1,6 @@
 import os
 import sys
+from random import randint
 os.system('clear')
 
 
@@ -48,7 +49,6 @@ class Board:
 
         return False
 
-
     def is_tie(self):
         for row in self.cells:
             for element in row:
@@ -62,23 +62,39 @@ class Board:
         self.cells = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
 
+class Comp:
+
+    def init(self, board, *args, **kwargs):
+        self.cells = board.cells
+        self.board = board
+
+    @staticmethod
+    def print_fack(self):
+        selected_row, selected_column = randint(0, 2), randint(0, 2)
+        while self.cells[selected_row][selected_column] != " ":
+            selected_row, selected_column = randint(0, 2), randint(0, 2)
+        return self.board.update_cell(selected_row, selected_column, "O")           
+
+    
+        
+
 class Game:
     """Main game tic-tac class. """
 
     def __init__(self, board, *args, **kwargs):
         """Initial game instance. """
-
         self.board = board
-
+        
     def print_header(self):
         print('Welcom to Tic-Tac-Toe\n')
-
+    
     def refresh_screen(self):
         os.system('clear')
         self.print_header()
         self.board.display()
 
     def run(self):
+        single_or_company = input("single or company? (S/C) :")
         while True:
             self.refresh_screen()
             self.step('X')
@@ -90,8 +106,12 @@ class Game:
             if self.board.is_tie():
                 print('\nTie game!\n')
                 self.finish()
+            
+            if single_or_company == "S":
+                Comp.print_fack(self)
+            else:    
+                self.step('O')
 
-            self.step('O')
             if self.board.is_winner('O'):
                 print('\nO wins!\n')
                 self.finish()
@@ -112,8 +132,6 @@ class Game:
             )-1
             if self.board.update_cell(selected_row, selected_column, player):
                 break
-
-
 
     def finish(self):
         play_again = input('Would you like to play again? (Y/N) > ').upper()
