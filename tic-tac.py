@@ -21,10 +21,14 @@ class Board:
     def update_cell(self, row, column, player):
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
+             
+            
+    def place_check(self, row, column):
+        if self.cells[row][column] == " ":
             return True
         else:
             print("this cell is occupied, repeat the move and be careful!)")
-            return False    
+            return False
 
     def is_winner(self, player):
         winner = player*3  # 'XXX' or 'OOO'
@@ -127,7 +131,8 @@ class Game:
             selected_column = int(
                 input('\n{0}) Please choose column >'.format(player))
             )-1
-            if self.board.update_cell(selected_row, selected_column, player):
+            if self.board.place_check(selected_row, selected_column):
+                self.board.update_cell(selected_row, selected_column, player)
                 break
 
     def finish(self):
