@@ -1,5 +1,6 @@
 import os
 import sys
+from random import randint
 os.system('clear')
 
 
@@ -61,13 +62,24 @@ class Board:
 
         self.cells = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
+class Comp:
+
+    def init(self, board, *args, **kwargs):
+        self.cells = board.cells
+        self.board = board
+
+    def print_fack(self):
+        selected_row, selected_column = randint(0, 2), randint(0, 2)
+        while self.cells[selected_row][selected_column] != " ":
+            selected_row, selected_column = randint(0, 2), randint(0, 2)
+        return self.board.update_cell(selected_row, selected_column, "O")
 
 class Game:
     """Main game tic-tac class. """
 
     def __init__(self, board, *args, **kwargs):
         """Initial game instance. """
-
+        self.cells = board.cells
         self.board = board
 
     def print_header(self):
@@ -79,6 +91,7 @@ class Game:
         self.board.display()
 
     def run(self):
+        single_or_company = input("single or company? (S/C) :")
         while True:
             self.refresh_screen()
             self.step('X')
@@ -91,7 +104,11 @@ class Game:
                 print('\nTie game!\n')
                 self.finish()
 
-            self.step('O')
+            if single_or_company == "S":
+                Comp.print_fack(self)
+            else:    
+                self.step('O')
+
             if self.board.is_winner('O'):
                 print('\nO wins!\n')
                 self.finish()
