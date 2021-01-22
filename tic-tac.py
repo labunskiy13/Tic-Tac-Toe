@@ -1,5 +1,6 @@
 import os
 import sys
+from random import randint
 os.system('clear')
 
 
@@ -20,10 +21,13 @@ class Board:
     def update_cell(self, row, column, player):
         if self.cells[row][column] == " ":
             self.cells[row][column] = player
+             
+    def place_check(self, row, column):
+        if self.cells[row][column] == " ":
             return True
         else:
             print("this cell is occupied, repeat the move and be careful!)")
-            return False    
+            return False
 
     def is_winner(self, player):
         winner = player*3  # 'XXX' or 'OOO'
@@ -62,12 +66,25 @@ class Board:
         self.cells = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
 
+class AiPlayer:
+
+    def init(self, board, *args, **kwargs):
+        self.cells = board.cells
+        self.board = board
+
+    def step_ai(self):
+        selected_row, selected_column = randint(0, 2), randint(0, 2)
+        while self.cells[selected_row][selected_column] != " ":
+            selected_row, selected_column = randint(0, 2), randint(0, 2)
+        return self.board.update_cell(selected_row, selected_column, "O")
+
+
 class Game:
     """Main game tic-tac class. """
 
     def __init__(self, board, *args, **kwargs):
         """Initial game instance. """
-
+        self.cells = board.cells
         self.board = board
 
     def print_header(self):
@@ -79,6 +96,7 @@ class Game:
         self.board.display()
 
     def run(self):
+        single_or_company = input("single or company? (S/C) :")
         while True:
             self.refresh_screen()
             self.step('X')
@@ -91,7 +109,11 @@ class Game:
                 print('\nTie game!\n')
                 self.finish()
 
-            self.step('O')
+            if single_or_company == "S":
+                AiPlayer.step_ai(self)
+            else:    
+                self.step('O')
+
             if self.board.is_winner('O'):
                 print('\nO wins!\n')
                 self.finish()
@@ -110,7 +132,8 @@ class Game:
             selected_column = int(
                 input('\n{0}) Please choose column >'.format(player))
             )-1
-            if self.board.update_cell(selected_row, selected_column, player):
+            if self.board.place_check(selected_row, selected_column):
+                self.board.update_cell(selected_row, selected_column, player)
                 break
 
     def finish(self):
