@@ -29,33 +29,33 @@ class Board:
             print("this cell is occupied, repeat the move and be careful!)")
             return False
 
-    def is_winner(self, player):
+    def is_winner(self, player, pole):
         winner = player*3  # 'XXX' or 'OOO'
 
         # Проверяем строки
-        for cell in self.cells:
+        for cell in pole:
             if ''.join(cell) == winner:
                 return True
 
         # Мы развернули нашу матрицу на 90 градусов, и тпперь проверяем столбцы.
-        for cell in list(zip(*self.cells)):
+        for cell in list(zip(*pole)):
             if ''.join(cell) == winner:
                 return True
 
         # Смотрим первую диагональ
-        if self.cells[0][0] + self.cells[1][1] + self.cells[2][2] == winner:
+        if pole[0][0] + pole[1][1] + pole[2][2] == winner:
             return True
 
         # Смотрим вторую диагональ
-        if self.cells[0][2] + self.cells[1][1] + self.cells[2][0] == winner:
+        if pole[0][2] + pole[1][1] + pole[2][0] == winner:
             return True
 
         return False
 
-    def is_tie(self):
+    def is_tie(self, pole):
         # TODO: Fix this loops!
 
-        for row in self.cells:
+        for row in pole:
             if " " in row:
                 return False
         return True
@@ -72,11 +72,56 @@ class AiPlayer:
         self.cells = board.cells
         self.board = board
 
+    def minimax(self, board, depth, is_ai_turn):
+        scores = {
+                  "X": -100,
+                  "O": 100,
+                  'tie': 0
+                 }
+        field = [self.cells[y].copy() for y in range(3)]
+        if Board.is_winner(self, "O", field):
+            return scores["O"]
+        if Board.is_winner(self, "X", field):
+            return scores["X"]
+        if Board.is_tie(self, field):
+            return scores['tie']
+
+        if is_ai_turn:
+            # выбираем ход который нам выгодней
+            best_score = - sys.maxsize
+            for y in range(3):
+                for x in range(3):
+                    if board[y][x] == " ":
+                        field[y][x] = "O"
+                        score = AiPlayer.minimax(self, field, depth + 1, False)
+                        field[y][x] = " "
+                        best_score = max(best_score, score)
+        else:
+            # противник выбирает ход который нам не выгоден
+            best_score = sys.maxsize
+            for y in range(3):
+                for x in range(3):
+                    if field[y][x] == " ":
+                        field[y][x] = "X"
+                        score = AiPlayer.minimax(self, board, depth + 1, True)
+                        field[y][x] = " "
+                        best_score = min(best_score, score)
+        return best_score             
+
     def step_ai(self):
-        selected_row, selected_column = randint(0, 2), randint(0, 2)
-        while self.cells[selected_row][selected_column] != " ":
-            selected_row, selected_column = randint(0, 2), randint(0, 2)
-        return self.board.update_cell(selected_row, selected_column, "O")
+        move = None
+        field = [self.cells[y].copy() for y in range(3)]
+        best_score = -sys.maxsize
+        for y in range(3):
+            for x in range(3):
+                if field[y][x] == " ":
+                    field[y][x] = "O"
+                    score = AiPlayer.minimax(self, field, 0, False)
+                    field[y][x] = " "
+                    if score > best_score:
+                        best_score = score
+                        move = (x, y)
+        return move
 
 
 class Game:
@@ -101,11 +146,11 @@ class Game:
             self.refresh_screen()
             self.step('X')
             self.refresh_screen()
-            if self.board.is_winner('X'):
+            if self.board.is_winner('X',self.cells):
                 print('\nX wins!\n')
                 self.finish()
 
-            if self.board.is_tie():
+            if self.board.is_tie(self.cells):
                 print('\nTie game!\n')
                 self.finish()
 
@@ -114,11 +159,11 @@ class Game:
             else:    
                 self.step('O')
 
-            if self.board.is_winner('O'):
+            if self.board.is_winner('O',self.cells):
                 print('\nO wins!\n')
                 self.finish()
 
-            if self.board.is_tie():
+            if self.board.is_tie(self.cells):
                 print('\nTie game!\n')
                 self.finish()
 
