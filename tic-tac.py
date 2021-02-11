@@ -1,6 +1,8 @@
 import os
 import sys
 from random import randint
+import csv
+import time
 os.system('clear')
 
 
@@ -86,6 +88,12 @@ class Game:
         """Initial game instance. """
         self.cells = board.cells
         self.board = board
+    
+    def save_game(self, act):
+        FILENAME = "game.csv"
+        with open(FILENAME, "a", newline="") as file:
+            writer = csv.writer(file, delimiter=":")
+            writer.writerow(act)
 
     def print_header(self):
         print('Welcom to Tic-Tac-Toe\n')
@@ -96,6 +104,8 @@ class Game:
         self.board.display()
 
     def run(self):
+        self.print_header()
+        time.sleep(1)
         single_or_company = input("single or company? (S/C) :")
         while True:
             self.refresh_screen()
@@ -103,10 +113,12 @@ class Game:
             self.refresh_screen()
             if self.board.is_winner('X'):
                 print('\nX wins!\n')
+                self.save_game(["X wins!"])
                 self.finish()
 
             if self.board.is_tie():
                 print('\nTie game!\n')
+                self.save_game(["Tie game!"])
                 self.finish()
 
             if single_or_company == "S":
@@ -116,10 +128,12 @@ class Game:
 
             if self.board.is_winner('O'):
                 print('\nO wins!\n')
+                self.save_game(["O wins!"])
                 self.finish()
 
             if self.board.is_tie():
                 print('\nTie game!\n')
+                self.save_game(["Tie game!"])
                 self.finish()
 
     def step(self, player):
@@ -134,11 +148,13 @@ class Game:
             )-1
             if self.board.place_check(selected_row, selected_column):
                 self.board.update_cell(selected_row, selected_column, player)
+                self.save_game([player, selected_row, selected_column])
                 break
 
     def finish(self):
         play_again = input('Would you like to play again? (Y/N) > ').upper()
         if play_again == 'Y':
+            self.save_game(["new game"])
             self.board.reset()
         else:
             sys.exit()
