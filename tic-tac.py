@@ -2,6 +2,7 @@ import os
 import sys
 from random import randint
 import csv
+import datetime
 import time
 os.system('clear')
 
@@ -73,11 +74,13 @@ class AiPlayer:
     def init(self, board, *args, **kwargs):
         self.cells = board.cells
         self.board = board
+        self.save_game = game.save_game
 
     def step_ai(self):
         selected_row, selected_column = randint(0, 2), randint(0, 2)
         while self.cells[selected_row][selected_column] != " ":
             selected_row, selected_column = randint(0, 2), randint(0, 2)
+        self.save_game(["O", selected_row, selected_column])
         return self.board.update_cell(selected_row, selected_column, "O")
 
 
@@ -104,19 +107,24 @@ class Game:
         self.board.display()
 
     def run(self):
+        date = datetime.datetime.today().strftime("%d.%m.%Y")
+        when = datetime.datetime.today().strftime("%H:%M:%S")
         self.print_header()
         time.sleep(1)
         single_or_company = input("single or company? (S/C) :")
+        self.save_game(["game number", date, when])
         while True:
             self.refresh_screen()
             self.step('X')
             self.refresh_screen()
             if self.board.is_winner('X'):
+                self.refresh_screen()
                 print('\nX wins!\n')
                 self.save_game(["X wins!"])
                 self.finish()
 
             if self.board.is_tie():
+                self.refresh_screen()
                 print('\nTie game!\n')
                 self.save_game(["Tie game!"])
                 self.finish()
@@ -127,11 +135,13 @@ class Game:
                 self.step('O')
 
             if self.board.is_winner('O'):
+                self.refresh_screen()
                 print('\nO wins!\n')
                 self.save_game(["O wins!"])
                 self.finish()
 
             if self.board.is_tie():
+                self.refresh_screen()
                 print('\nTie game!\n')
                 self.save_game(["Tie game!"])
                 self.finish()
@@ -156,6 +166,7 @@ class Game:
         if play_again == 'Y':
             self.save_game(["new game"])
             self.board.reset()
+            self.run()
         else:
             sys.exit()
 
